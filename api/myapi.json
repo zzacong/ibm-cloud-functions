@@ -1,0 +1,83 @@
+{
+    "swagger": "2.0",
+    "basePath": "/myapi",
+    "info": {
+        "title": "/myapi",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/greeting": {
+            "get": {
+                "operationId": "getGreeting",
+                "responses": {
+                    "default": {
+                        "description": "Default response"
+                    }
+                },
+                "x-openwhisk": {
+                    "action": "hello",
+                    "namespace": "5584b03d-78a9-44cc-93be-8d3559da4dd5",
+                    "package": "",
+                    "url": "https://au-syd.functions.cloud.ibm.com/api/v1/web/5584b03d-78a9-44cc-93be-8d3559da4dd5/default/hello.json"
+                }
+            }
+        },
+        "/redirect": {
+            "get": {
+                "operationId": "getRedirect",
+                "responses": {
+                    "default": {
+                        "description": "Default response"
+                    }
+                },
+                "x-openwhisk": {
+                    "action": "redirect",
+                    "namespace": "5584b03d-78a9-44cc-93be-8d3559da4dd5",
+                    "package": "",
+                    "url": "https://au-syd.functions.cloud.ibm.com/api/v1/web/5584b03d-78a9-44cc-93be-8d3559da4dd5/default/redirect.http"
+                }
+            }
+        }
+    },
+    "x-ibm-configuration": {
+        "assembly": {
+            "execute": [
+                {
+                    "operation-switch": {
+                        "case": [
+                            {
+                                "execute": [
+                                    {
+                                        "invoke": {
+                                            "target-url": "https://au-syd.functions.cloud.ibm.com/api/v1/web/5584b03d-78a9-44cc-93be-8d3559da4dd5/default/hello.json",
+                                            "verb": "keep"
+                                        }
+                                    }
+                                ],
+                                "operations": [
+                                    "getGreeting"
+                                ]
+                            },
+                            {
+                                "execute": [
+                                    {
+                                        "invoke": {
+                                            "target-url": "https://au-syd.functions.cloud.ibm.com/api/v1/web/5584b03d-78a9-44cc-93be-8d3559da4dd5/default/redirect.http$(request.path)",
+                                            "verb": "keep"
+                                        }
+                                    }
+                                ],
+                                "operations": [
+                                    "getRedirect"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "cors": {
+            "enabled": true
+        }
+    }
+}
